@@ -3,10 +3,12 @@ import random
 # Global moves list
 moves = ['rock', 'paper', 'scissors']
 
+
 def beats(one, two):
     return ((one == 'rock' and two == 'scissors') or
             (one == 'scissors' and two == 'paper') or
             (one == 'paper' and two == 'rock'))
+
 
 # Base Player class
 class Player:
@@ -16,10 +18,18 @@ class Player:
     def learn(self, my_move, their_move):
         pass
 
+
+# AlwaysRockPlayer class
+class AlwaysRockPlayer(Player):
+    def move(self):
+        return 'rock'
+
+
 # RandomPlayer class
 class RandomPlayer(Player):
     def move(self):
         return random.choice(moves)
+
 
 # HumanPlayer class with input validation
 class HumanPlayer(Player):
@@ -28,6 +38,7 @@ class HumanPlayer(Player):
         while move not in moves:
             move = input("Invalid move. Enter your move (rock, paper, or scissors): ").lower()
         return move
+
 
 # ReflectPlayer class that imitates opponent's last move
 class ReflectPlayer(Player):
@@ -43,6 +54,7 @@ class ReflectPlayer(Player):
     def learn(self, my_move, their_move):
         self.their_last_move = their_move
 
+
 # CyclePlayer class that cycles through moves
 class CyclePlayer(Player):
     def __init__(self):
@@ -57,6 +69,7 @@ class CyclePlayer(Player):
 
     def learn(self, my_move, their_move):
         self.my_last_move = my_move
+
 
 # Game class to manage the game
 class Game:
@@ -84,11 +97,26 @@ class Game:
 
     def play_game(self):
         print("Game start!")
-        rounds = int(input("Enter the number of rounds to play: "))
+        rounds = self.get_valid_rounds()
         for round in range(rounds):
             print(f"Round {round + 1}:")
             self.play_round()
+        self.display_final_score()
+
+    def get_valid_rounds(self):
+        while True:
+            try:
+                rounds = int(input("Enter the number of rounds to play: "))
+                if rounds > 0:
+                    return rounds
+                else:
+                    print("Please enter a positive integer.")
+            except ValueError:
+                print("Invalid input. Please enter a positive integer.")
+
+    def display_final_score(self):
         print("Game over!")
+        print(f"Final Score: Player 1 - {self.score_p1}, Player 2 - {self.score_p2}")
         if self.score_p1 > self.score_p2:
             print("Player 1 wins the game!")
         elif self.score_p2 > self.score_p1:
@@ -96,19 +124,38 @@ class Game:
         else:
             print("The game is a tie!")
 
+
 if __name__ == '__main__':
-    strategies = [Player(), RandomPlayer(), ReflectPlayer(), CyclePlayer()]
+    strategies = [AlwaysRockPlayer(), RandomPlayer(), ReflectPlayer(), CyclePlayer()]
     print("Choose the player type for Player 1:")
     for idx, strategy in enumerate(strategies):
         print(f"{idx}: {strategy.__class__.__name__}")
-    p1_choice = int(input("Enter your choice: "))
-    p1 = strategies[p1_choice]
+
+    while True:
+        try:
+            p1_choice = int(input("Enter your choice: "))
+            if 0 <= p1_choice < len(strategies):
+                p1 = strategies[p1_choice]
+                break
+            else:
+                print("Invalid choice. Please select a valid player type.")
+        except ValueError:
+            print("Invalid input. Please enter a number corresponding to the player type.")
 
     print("Choose the player type for Player 2:")
     for idx, strategy in enumerate(strategies):
         print(f"{idx}: {strategy.__class__.__name__}")
-    p2_choice = int(input("Enter your choice: "))
-    p2 = strategies[p2_choice]
+
+    while True:
+        try:
+            p2_choice = int(input("Enter your choice: "))
+            if 0 <= p2_choice < len(strategies):
+                p2 = strategies[p2_choice]
+                break
+            else:
+                print("Invalid choice. Please select a valid player type.")
+        except ValueError:
+            print("Invalid input. Please enter a number corresponding to the player type.")
 
     game = Game(p1, p2)
     game.play_game()
