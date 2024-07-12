@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import random
 
 # Global moves list
@@ -73,18 +75,18 @@ class CyclePlayer(Player):
 
 # Game class to manage the game
 class Game:
-    def __init__(self, p1, p2):
-        self.p1 = p1
-        self.p2 = p2
+    def __init__(self, player1, player2):
+        self.player1 = player1
+        self.player2 = player2
         self.score_p1 = 0
         self.score_p2 = 0
 
     def play_round(self):
-        move1 = self.p1.move()
-        move2 = self.p2.move()
+        move1 = self.player1.move()
+        move2 = self.player2.move()
         print(f"Player 1: {move1}  Player 2: {move2}")
-        self.p1.learn(move1, move2)
-        self.p2.learn(move2, move1)
+        self.player1.learn(move1, move2)
+        self.player2.learn(move2, move1)
         if beats(move1, move2):
             print("Player 1 wins the round!")
             self.score_p1 += 1
@@ -98,12 +100,13 @@ class Game:
     def play_game(self):
         print("Game start!")
         rounds = self.get_valid_rounds()
-        for round in range(rounds):
-            print(f"Round {round + 1}:")
+        for round_num in range(rounds):
+            print(f"Round {round_num + 1}:")
             self.play_round()
         self.display_final_score()
 
-    def get_valid_rounds(self):
+    @staticmethod
+    def get_valid_rounds():
         while True:
             try:
                 rounds = int(input("Enter the number of rounds to play: "))
@@ -133,9 +136,9 @@ if __name__ == '__main__':
 
     while True:
         try:
-            p1_choice = int(input("Enter your choice: "))
-            if 0 <= p1_choice < len(strategies):
-                p1 = strategies[p1_choice]
+            player1_choice = int(input("Enter your choice: "))
+            if 0 <= player1_choice < len(strategies):
+                selected_player1 = strategies[player1_choice]
                 break
             else:
                 print("Invalid choice. Please select a valid player type.")
@@ -148,14 +151,14 @@ if __name__ == '__main__':
 
     while True:
         try:
-            p2_choice = int(input("Enter your choice: "))
-            if 0 <= p2_choice < len(strategies):
-                p2 = strategies[p2_choice]
+            player2_choice = int(input("Enter your choice: "))
+            if 0 <= player2_choice < len(strategies):
+                selected_player2 = strategies[player2_choice]
                 break
             else:
                 print("Invalid choice. Please select a valid player type.")
         except ValueError:
             print("Invalid input. Please enter a number corresponding to the player type.")
 
-    game = Game(p1, p2)
+    game = Game(selected_player1, selected_player2)
     game.play_game()
