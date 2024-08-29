@@ -18,8 +18,8 @@ This is a Python implementation of the classic Rock, Paper, Scissors game. The g
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/Vrana710/ProjectRockPaperScissors-.git
-    cd ProjectRockPaperScissors-
+    git clone https://github.com/Vrana710/ProjectRockPaperScissors.git
+    cd ProjectRockPaperScissors
     ```
 
 2. Make sure you have Python installed. This project is compatible with Python 3.x.
